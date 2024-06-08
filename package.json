@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "brew install pkg-config cairo pango libpng jpeg giflib librsvg && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prebuild": "brew install pkg-config cairo pango libpng jpeg giflib librsvg && yarn build"
   },
   "dependencies": {
     "canvas": "^2.11.2",
