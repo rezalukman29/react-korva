@@ -1,113 +1,120 @@
+/* eslint-disable @next/next/no-img-element */
+"use client";
 import Image from "next/image";
+import React from "react";
+import { Stage, Rect, Layer, Star, Text } from "react-konva";
+
+function generateShapes() {
+  return [...Array(2)].map((_, i) => ({
+    id: i === 1 ? 'Table B' : 'Table C',
+    x: Math.random() * 500,
+    y: Math.random() * 500,
+    rotation: Math.random() * 180,
+    isDragging: false,
+  }));
+}
+
+const INITIAL_STATE = generateShapes();
 
 export default function Home() {
+  const [stars, setStars] = React.useState(INITIAL_STATE);
+
+  const handleDragStart = (e: any) => {
+    const id = e.target.id();
+    setStars(
+      stars.map((star) => {
+        return {
+          ...star,
+          isDragging: star.id === id,
+        };
+      })
+    );
+  };
+  const handleDragEnd = (e: any) => {
+    setStars(
+      stars.map((star) => {
+        return {
+          ...star,
+          isDragging: false,
+        };
+      })
+    );
+  };
+const onChoose = (id: string) => {
+  console.log(id)
+  setTimeout(function () {
+    window.postMessage(`Select ${id}`, "*");
+}, 0) 
+}
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
+    // <div className="flex min-h-screen flex-col items-center justify-between p-24 bg-white">
+    <div className="flex w-[500px] h-[500px] bg-white flex-col">
+      <img
+        alt="map"
+        style={{ position: "absolute" }}
+        src={
+          "https://cxapp.com/hs-fs/hubfs/Imported_Blog_Media/blog-image-indoor-mapping-engine.png?width=760&height=550&name=blog-image-indoor-mapping-engine.png"
+        }
+        className="w-[500px] h-[500px] object-cover"
+      />
+      <Stage width={500} height={500} className="z-50">
+        <Layer>
+          {stars.map((star) => (
+            <Rect
+              key={star.id}
+              id={star.id}
+              x={star.x}
+              y={star.y}
+              draggable
+              // rotation={star.rotation}
+              width={50}
+              height={50}
+              fill="red"
+              shadowBlur={10}
+              onClick={() => onChoose(star.id)}
+              shadowOffsetX={star.isDragging ? 10 : 5}
+              shadowOffsetY={star.isDragging ? 10 : 5}
+              scaleX={star.isDragging ? 1.2 : 1}
+              scaleY={star.isDragging ? 1.2 : 1}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
             />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+            // <Star
+            //   onClick={() => console.log("sipp")}
+            //   key={star.id}
+            //   id={star.id}
+            //   x={star.x}
+            //   y={star.y}
+            //   numPoints={5}
+            //   innerRadius={20}
+            //   outerRadius={40}
+            //   fill="#89b717"
+            //   opacity={0.8}
+            //   draggable
+            //   rotation={star.rotation}
+            //   shadowColor="black"
+            //   shadowBlur={10}
+            //   shadowOpacity={0.6}
+            //   shadowOffsetX={star.isDragging ? 10 : 5}
+            //   shadowOffsetY={star.isDragging ? 10 : 5}
+            //   scaleX={star.isDragging ? 1.2 : 1}
+            //   scaleY={star.isDragging ? 1.2 : 1}
+            //   onDragStart={handleDragStart}
+            //   onDragEnd={handleDragEnd}
+            // />
+          ))}
+          <Rect
+            x={20}
+            y={50}
+            width={50}
+            height={50}
+            fill="red"
+            shadowBlur={10}
+            onClick={() => onChoose('Table Server')}
+          />
+          <Text x={25} y={60} text="Table 1" />
+        </Layer>
+      </Stage>
+    </div>
   );
 }
