@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "package": "brew install pkg-config cairo pango libpng jpeg giflib librsvg && yarn install",
     "prebuild": "brew install pkg-config cairo pango libpng jpeg giflib librsvg && yarn build"
   },
   "dependencies": {
